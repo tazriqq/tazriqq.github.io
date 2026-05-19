@@ -600,12 +600,16 @@ body::after {
     <div id="exhibitArea"></div>
 
     <div class="nav-bar">
-      <button class="nav-btn" id="btnPrev" onclick="go(-1)">← <span class="lbl">ก่อนหน้า</span></button>
-      <div class="nav-spacer"></div>
-      <button class="nav-btn nav-game" onclick="alert('เปิดเกมทายโบราณวัตถุ')">🎮 <span class="lbl">เล่นเกมทาย</span></button>
-      <div class="nav-spacer"></div>
-      <button class="nav-btn" id="btnNext" onclick="go(1)"><span class="lbl">ถัดไป</span> →</button>
-    </div>
+    <button class="nav-btn" id="btnPrev" onclick="go(-1)">← <span class="lbl">ก่อนหน้า</span></button>
+
+    <div class="nav-spacer"></div>
+
+    <button class="nav-btn nav-game" onclick="location.href='game.html'">🎮 <span class="lbl">เล่นเกมทาย</span></button>
+
+    <div class="nav-spacer"></div>
+
+    <button class="nav-btn" id="btnNext" onclick="go(1)"><span class="lbl">ถัดไป</span> →</button>
+</div>
 
     <div class="kbd-hint">
       ใช้ปุ่ม <span class="kbd">←</span> <span class="kbd">→</span> บนคีย์บอร์ดเพื่อเปลี่ยนชิ้น
