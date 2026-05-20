@@ -132,10 +132,7 @@ body::before{content:'';position:fixed;inset:0;
 .btn-ghost:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.2);color:var(--txt)}
 .btn-check{background:rgba(201,162,75,.14);border-color:rgba(201,162,75,.38);color:var(--gold-lt);margin-left:auto}
 .btn-check:hover{background:rgba(201,162,75,.26);border-color:var(--gold-lt)}
-.btn-new{background:linear-gradient(135deg,var(--gold-dim),var(--gold));
-  border-color:var(--gold-lt);color:#1a1008;font-weight:600;width:100%;justify-content:center;margin-top:.5rem}
-.btn-new:hover{background:linear-gradient(135deg,var(--gold),var(--gold-lt));
-  box-shadow:0 6px 20px rgba(201,162,75,.28);transform:translateY(-1px)}
+
 
 /* feedback */
 .fb{min-height:24px;text-align:center;margin-top:.85rem;font-size:.92rem;font-weight:500;letter-spacing:.02em}
@@ -242,6 +239,7 @@ function pickRandom() {
 }
 
 function loadNew() {
+  if (answered) return;
   answered = false;
   currentItem = pickRandom();
   const editables = getEditables(currentItem);
@@ -281,7 +279,7 @@ function renderCard() {
   }
 
   const disableCtrl = answered ? 'style="opacity:.3;pointer-events:none"' : '';
-  const newBtnLabel = answered ? 'สุ่มข้อใหม่ ↻' : 'ข้ามข้อนี้ ↻';
+
 
   document.getElementById('gameArea').innerHTML = `
     <div class="card">
@@ -299,11 +297,10 @@ function renderCard() {
         <div class="blank-row" id="blankRow">${blanksHTML}</div>
         ${!answered ? `<div class="pool-label">คลังตัวอักษร</div><div class="pool" id="tilePool">${tilesHTML}</div>` : ''}
         <div class="ctrl-row" ${disableCtrl}>
-          <button class="btn btn-ghost" onclick="clearAll()">↺ ล้าง</button>
+          <button class="btn btn-ghost" onclick="clearAll()">↺ ล้างคำตอบ</button>
           <button class="btn btn-check" onclick="checkAnswer()">ตรวจคำตอบ ✓</button>
         </div>
         <div class="fb" id="fb"></div>
-        <button class="btn btn-new" onclick="loadNew()">${newBtnLabel}</button>
       </div>
     </div>`;
 }
@@ -354,8 +351,17 @@ function checkAnswer() {
     document.getElementById('streakNum').textContent = streak;
     answered = true;
     markSlots('correct');
-    setFb('ถูกต้อง! 🎉  —  ' + currentItem.name,'ok');
+    setFb('ถูกต้อง! 🎉  ' + currentItem.name, 'ok');
     renderCard();
+    // ซ่อน controls หลังตอบถูก
+    setTimeout(() => {
+      const pool = document.getElementById('tilePool');
+      const ctrl = document.querySelector('.ctrl-row');
+      const poolLabel = document.querySelector('.pool-label');
+      if (pool) pool.style.display = 'none';
+      if (ctrl) ctrl.style.display = 'none';
+      if (poolLabel) poolLabel.style.display = 'none';
+    }, 50);
   } else {
     streak = 0;
     document.getElementById('streakNum').textContent = streak;
