@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>รับคูปองส่วนลด - Isan Fried</title>
+  <title>รับคูปองส่วนลด - Isan Fries</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Library สร้าง QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -15,19 +15,19 @@
       #cardScaler {
         transform: scale(0.9);
         transform-origin: top center;
-        margin-bottom: -45px; /* ชดเชยพื้นที่ว่างหลังย่อ */
+        margin-bottom: -45px;
       }
     }
   </style>
 </head>
 <body class="bg-[#dcd6f7] min-h-screen flex items-center justify-center p-3 sm:p-6">
 
-  <!-- Main Container: ยืดหดตามจอ แต่ล็อกความกว้างสูงสุดที่ max-w-sm (384px) -->
+  <!-- Main Container -->
   <div class="bg-white rounded-3xl shadow-xl w-full max-w-[360px] sm:max-w-sm p-4 sm:p-6 text-center flex flex-col items-center">
     
     <!-- ส่วนหัวหน้าเว็บ -->
-    <h1 class="text-lg sm:text-xl font-black text-slate-800 tracking-wide uppercase">ISAN FRIED</h1>
-    <p class="text-slate-400 text-[11px] sm:text-xs mt-0.5">11.11 ลด 11 บาทค้าบบบบบบบบบบบ</p>
+    <h1 class="text-lg sm:text-xl font-black text-slate-800 tracking-wide uppercase">ISAN FRIES</h1>
+    <p class="text-slate-400 text-[11px] sm:text-xs mt-0.5">11.11 ลด 11 บาท ค้าบบบบบ</p>
 
     <!-- ป้ายบอกจำนวนสิทธิ์คงเหลือ -->
     <div class="my-3 sm:my-4 py-2 px-4 sm:px-5 bg-slate-50 rounded-2xl border border-slate-200 w-full flex items-center justify-between">
@@ -35,17 +35,17 @@
       <div id="quotaDisplay" class="text-lg sm:text-xl font-black text-[#1e1b4b]">กำลังโหลด...</div>
     </div>
 
-    <!-- Scaler Wrapper ป้องกันหน้าจอล้นในมือถือรุ่นเล็ก -->
+    <!-- Scaler Wrapper ป้องกันหน้าจอล้นในมือถือขนาดเล็ก -->
     <div id="cardScaler" class="w-full flex justify-center my-1 select-none">
       
-      <!-- ตัวการ์ดคูปอง: ขนาดล็อก 310 x 510 px เพื่อให้ Render รูปภาพได้สัดส่วนสมบูรณ์ -->
+      <!-- การ์ดคูปอง: ขนาดล็อก 310 x 510 px สำหรับ Export รูปภาพ -->
       <div id="couponCard" style="width: 310px; height: 510px; background-color: #ffffff;" 
            class="rounded-3xl shadow-lg relative overflow-hidden border border-slate-100 flex flex-col justify-between items-center text-center">
         
         <!-- ส่วนบน: แบรนด์และตัวเลขส่วนลด 11฿ OFF -->
         <div class="pt-4 px-5 w-full flex flex-col items-center">
           <span class="text-3xl mb-0.5">🔥</span>
-          <h3 class="text-xs font-black tracking-widest text-slate-400 uppercase">ISAN FRIES</h3>
+          <h3 class="text-xs font-black tracking-widest text-slate-400 uppercase">ISAN FRIED</h3>
           <p class="text-[10px] font-medium text-slate-500 mt-0.5">Exclusive Discount Coupon</p>
 
           <div class="my-2">
@@ -58,7 +58,7 @@
             </div>
           </div>
 
-          <p class="text-[9px] text-slate-400 font-medium">*สแกนรับสิทธิ์เฉพาะหน้าร้านเท่านั้น*</p>
+          <p class="text-[9px] text-slate-400 font-medium">*สแกนใช้สิทธิ์เฉพาะหน้าร้านเท่านั้น*</p>
         </div>
 
         <!-- รอยต่อตั๋ว: รอยเว้าซ้าย-ขวา + เส้นประ -->
@@ -104,6 +104,7 @@
   </div>
 
   <script>
+    // ** Web App URL ของ Google Apps Script **
     const API_URL = "https://script.google.com/macros/s/AKfycbzXSeu4g8RzhXwceHTULZNBEQ8P9dzjG49IDZCc6WqRqwVbzQw04cCObKO4nPzVke5Nlg/exec";
 
     async function fetchQuota() {
@@ -141,8 +142,10 @@
         if (data.status === 'success') {
           const code = data.code;
           
+          // 1. ใส่รหัสลงใน Badge
           document.getElementById('couponCodeText').innerText = code;
 
+          // 2. สร้าง QR Code ขนาด 110x110 px
           const verifyUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}verify.html?code=${code}`;
           const qrContainer = document.getElementById('qrCodeContainer');
           qrContainer.innerHTML = "";
@@ -155,9 +158,10 @@
             correctLevel: QRCode.CorrectLevel.M
           });
 
+          // รอให้ DOM วาด QR Code สมบูรณ์
           await new Promise(r => setTimeout(r, 250));
 
-          // รีเซ็ตการ Transform ชั่วคราวเพื่อให้ html2canvas วาดขนาดจริงได้ถูกต้อง
+          // 3. รีเซ็ต Transform ชั่วคราวเพื่อให้คำนวณขนาดภาพคงที่
           const scaler = document.getElementById('cardScaler');
           const currentTransform = scaler.style.transform;
           scaler.style.transform = "none";
@@ -173,15 +177,41 @@
             scrollY: 0
           });
 
-          // คืนค่า Transform
+          // คืนค่า Scale หน้าจอ
           scaler.style.transform = currentTransform;
 
-          const link = document.createElement('a');
-          link.download = `IsanFried-Coupon-${code}.png`;
-          link.href = canvas.toDataURL('image/png');
-          link.click();
+          // 4. บันทึก/ดาวน์โหลดรูปภาพ (รองรับ Safari iOS และ Browser ทั่วไป)
+          canvas.toBlob(async (blob) => {
+            const fileName = `IsanFried-Coupon-${code}.png`;
+            const file = new File([blob], fileName, { type: "image/png" });
 
-          btn.innerText = "บันทึกคูปองสำเร็จแล้ว";
+            // ตรวจสอบ Web Share API (สำหรับ Safari บน iPhone)
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              try {
+                await navigator.share({
+                  files: [file],
+                  title: 'คูปอง Isan Fried',
+                  text: `คูปองส่วนลด 11 บาท รหัส: ${code}`
+                });
+                btn.innerText = "รับคูปองสำเร็จแล้ว";
+              } catch (shareErr) {
+                // ผู้ใช้กดยกเลิกหน้าต่าง Share ให้เตือนแคปหน้าจอแทน
+                btn.innerText = "โปรดแคปหน้าจอไว้";
+              }
+            } else {
+              // วิธีดาวน์โหลดปกติสำหรับ PC หรือ Browser ทั่วไป
+              const blobUrl = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = blobUrl;
+              link.download = fileName;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(blobUrl);
+              btn.innerText = "ดาวน์โหลดสำเร็จแล้ว";
+            }
+          }, "image/png");
+
           fetchQuota();
         } else {
           showSoldOut();
