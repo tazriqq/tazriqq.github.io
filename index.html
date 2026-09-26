@@ -2,50 +2,63 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>รับคูปองส่วนลด - Isan Fried</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Library สร้าง QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- Library แปลง HTML เป็นรูปภาพ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    /* ปรับ Scale ของตั๋วอัตโนมัติสำหรับหน้าจอที่แคบกว่า 340px (เช่น iPhone SE รุ่นเก่า) */
+    @media (max-width: 340px) {
+      #cardScaler {
+        transform: scale(0.9);
+        transform-origin: top center;
+        margin-bottom: -45px; /* ชดเชยพื้นที่ว่างหลังย่อ */
+      }
+    }
+  </style>
 </head>
-<body class="bg-[#dcd6f7] min-h-screen flex items-center justify-center p-4">
+<body class="bg-[#dcd6f7] min-h-screen flex items-center justify-center p-3 sm:p-6">
 
-  <div class="bg-white rounded-3xl shadow-xl max-w-sm w-full p-6 text-center flex flex-col items-center">
+  <!-- Main Container: ยืดหดตามจอ แต่ล็อกความกว้างสูงสุดที่ max-w-sm (384px) -->
+  <div class="bg-white rounded-3xl shadow-xl w-full max-w-[360px] sm:max-w-sm p-4 sm:p-6 text-center flex flex-col items-center">
     
     <!-- ส่วนหัวหน้าเว็บ -->
-    <h1 class="text-xl font-black text-slate-800 tracking-wide uppercase">ISAN FRIED</h1>
-    <p class="text-slate-400 text-xs mt-0.5">กิจกรรมแจกคูปองส่วนลดพิเศษหน้าร้าน</p>
+    <h1 class="text-lg sm:text-xl font-black text-slate-800 tracking-wide uppercase">ISAN FRIED</h1>
+    <p class="text-slate-400 text-[11px] sm:text-xs mt-0.5">11.11 ลด 11 บาทค้าบบบบบบบบบบบ</p>
 
     <!-- ป้ายบอกจำนวนสิทธิ์คงเหลือ -->
-    <div class="my-4 py-2 px-5 bg-slate-50 rounded-2xl border border-slate-200 w-full flex items-center justify-between">
-      <span class="text-xs uppercase tracking-wider text-slate-400 font-bold">สิทธิ์คงเหลือ</span>
-      <div id="quotaDisplay" class="text-xl font-black text-[#1e1b4b]">กำลังโหลด...</div>
+    <div class="my-3 sm:my-4 py-2 px-4 sm:px-5 bg-slate-50 rounded-2xl border border-slate-200 w-full flex items-center justify-between">
+      <span class="text-[11px] sm:text-xs uppercase tracking-wider text-slate-400 font-bold">สิทธิ์คงเหลือ</span>
+      <div id="quotaDisplay" class="text-lg sm:text-xl font-black text-[#1e1b4b]">กำลังโหลด...</div>
     </div>
 
-    <!-- การ์ดคูปอง: ล็อกขนาดตายตัว 310 x 510 px เพื่อให้ html2canvas คำนวณตรงเป๊ะ ไม่ยืด -->
-    <div class="my-2 select-none">
+    <!-- Scaler Wrapper ป้องกันหน้าจอล้นในมือถือรุ่นเล็ก -->
+    <div id="cardScaler" class="w-full flex justify-center my-1 select-none">
+      
+      <!-- ตัวการ์ดคูปอง: ขนาดล็อก 310 x 510 px เพื่อให้ Render รูปภาพได้สัดส่วนสมบูรณ์ -->
       <div id="couponCard" style="width: 310px; height: 510px; background-color: #ffffff;" 
            class="rounded-3xl shadow-lg relative overflow-hidden border border-slate-100 flex flex-col justify-between items-center text-center">
         
         <!-- ส่วนบน: แบรนด์และตัวเลขส่วนลด 11฿ OFF -->
-        <div class="pt-6 px-5 w-full flex flex-col items-center">
-          <span class="text-3xl mb-1">🔥</span>
+        <div class="pt-4 px-5 w-full flex flex-col items-center">
+          <span class="text-3xl mb-0.5">🔥</span>
           <h3 class="text-xs font-black tracking-widest text-slate-400 uppercase">ISAN FRIED</h3>
           <p class="text-[10px] font-medium text-slate-500 mt-0.5">Exclusive Discount Coupon</p>
 
-          <div class="my-3">
+          <div class="my-2">
             <div class="flex items-baseline justify-center">
               <span class="text-6xl font-black text-[#1e1b4b] tracking-tighter leading-none">11</span>
               <span class="text-3xl font-black text-[#1e1b4b] ml-1">฿</span>
             </div>
-            <div class="text-base font-black tracking-[0.35em] text-[#1e1b4b] mt-1 uppercase">
+            <div class="text-base font-black tracking-[0.35em] text-[#1e1b4b] mt-0.5 uppercase">
               OFF
             </div>
           </div>
 
-          <p class="text-[9px] text-slate-400 font-medium">*สแกนรับสิทธิ์เฉพาะหน้าร้านเท่านั้น</p>
+          <p class="text-[9px] text-slate-400 font-medium">*สแกนรับสิทธิ์เฉพาะหน้าร้านเท่านั้น*</p>
         </div>
 
         <!-- รอยต่อตั๋ว: รอยเว้าซ้าย-ขวา + เส้นประ -->
@@ -55,13 +68,18 @@
           <div class="w-6 h-6 bg-[#dcd6f7] rounded-full absolute -right-3"></div>
         </div>
 
-        <!-- ส่วนล่าง: QR Code และ Badge รหัส -->
-        <div class="pb-6 px-5 w-full flex flex-col items-center">
-          <span class="text-[10px] text-slate-400 font-semibold mb-2">แสดง QR Code นี้แก่พนักงาน</span>
+        <!-- ส่วนล่าง: QR Code, คำเตือน และ Badge รหัส -->
+        <div class="pb-5 px-4 w-full flex flex-col items-center">
+          <span class="text-[10px] text-slate-400 font-semibold mb-1.5">แสดง QR Code นี้แก่พนักงาน</span>
           
-          <!-- กล่องใส่ QR Code ขนาดตายตัว -->
-          <div id="qrCodeContainer" class="p-2 bg-white border border-slate-100 rounded-2xl shadow-sm mb-3 w-[126px] h-[126px] flex items-center justify-center">
+          <div id="qrCodeContainer" class="p-2 bg-white border border-slate-100 rounded-2xl shadow-sm mb-2 w-[126px] h-[126px] flex items-center justify-center">
             <span class="text-[10px] text-slate-300 font-mono">WAITING</span>
+          </div>
+
+          <!-- กล่องเตือนใต้ QR Code -->
+          <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200/80 text-amber-800 text-[10px] font-semibold leading-none mb-2">
+            <span>⚠️</span>
+            <span>โปรดแคปหน้าจอเก็บไว้ เพื่อนำมาแสดงสิทธิ์หน้าร้าน</span>
           </div>
 
           <!-- กล่องรหัสคูปอง -->
@@ -74,19 +92,18 @@
     </div>
 
     <!-- ข้อความแจ้งเตือนกรณีสิทธิ์หมด -->
-    <div id="soldOutMsg" class="hidden text-rose-500 font-bold my-3 text-sm">
+    <div id="soldOutMsg" class="hidden text-rose-500 font-bold my-2 text-xs sm:text-sm">
       ขออภัย สิทธิ์คูปองถูกแจกหมดแล้ว (Sold Out)
     </div>
 
     <!-- ปุ่มดาวน์โหลดคูปอง -->
     <button id="claimBtn" onclick="claimCoupon()" disabled 
-      class="mt-3 w-full py-3.5 px-4 bg-[#1e1b4b] hover:bg-slate-900 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold rounded-2xl shadow-md transition duration-200">
+      class="mt-3 w-full py-3 sm:py-3.5 px-4 bg-[#1e1b4b] hover:bg-slate-900 disabled:bg-slate-200 disabled:text-slate-400 text-white text-sm sm:text-base font-bold rounded-2xl shadow-md transition duration-200">
       ดาวน์โหลดคูปอง
     </button>
   </div>
 
   <script>
-    // ** ใส่ Web App URL ของคุณที่นี่ **
     const API_URL = "https://script.google.com/macros/s/AKfycbzXSeu4g8RzhXwceHTULZNBEQ8P9dzjG49IDZCc6WqRqwVbzQw04cCObKO4nPzVke5Nlg/exec";
 
     async function fetchQuota() {
@@ -124,10 +141,8 @@
         if (data.status === 'success') {
           const code = data.code;
           
-          // 1. นำรหัสไปใส่ใน Badge
           document.getElementById('couponCodeText').innerText = code;
 
-          // 2. เรนเดอร์ QR Code ขนาด 110x110 px
           const verifyUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}verify.html?code=${code}`;
           const qrContainer = document.getElementById('qrCodeContainer');
           qrContainer.innerHTML = "";
@@ -140,22 +155,27 @@
             correctLevel: QRCode.CorrectLevel.M
           });
 
-          // หน่วงเวลาให้เบราว์เซอร์วาด DOM และ QR Code ครบถ้วน
           await new Promise(r => setTimeout(r, 250));
 
-          // 3. ใช้ html2canvas แปลงภาพโดยล็อกความกว้าง-สูงตายตัว
+          // รีเซ็ตการ Transform ชั่วคราวเพื่อให้ html2canvas วาดขนาดจริงได้ถูกต้อง
+          const scaler = document.getElementById('cardScaler');
+          const currentTransform = scaler.style.transform;
+          scaler.style.transform = "none";
+
           const cardElement = document.getElementById('couponCard');
           const canvas = await html2canvas(cardElement, { 
-            scale: 3,                  // ความคมชัดระดับ 3x HD
+            scale: 3,
             useCORS: true,
             backgroundColor: null,
-            width: 310,                // ล็อกตามความกว้างจริง
-            height: 510,               // ล็อกตามความสูงจริง
+            width: 310,
+            height: 510,
             scrollX: 0,
             scrollY: 0
           });
 
-          // 4. สั่งดาวน์โหลดภาพ .png
+          // คืนค่า Transform
+          scaler.style.transform = currentTransform;
+
           const link = document.createElement('a');
           link.download = `IsanFried-Coupon-${code}.png`;
           link.href = canvas.toDataURL('image/png');
